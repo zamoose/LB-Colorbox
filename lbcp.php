@@ -34,7 +34,6 @@ $kuler_api_key = "9E7F91134BFC9D170BFB8325C3548076";
 $kuler_api_url = 'http://kuler-api.adobe.com/rss/get.cfm?listtype=';
 $kuler_recent = 'recent&key=';
 
-
 function lbcb_get_recent_kuler(){
 	//$feed = fetch_feed(  $kuler_api_url . 'recent&key=' . $kuler_api_key );
 	
@@ -50,22 +49,22 @@ function lbcb_get_popular_kuler(){
 	$feed = fetch_feed( 'http://localhost:8888/popular.xml');
 	
 	//print_r($feed);
-	//var_dump($feed);
 	$feed_items = $feed->get_items(0,1);
 	
-	foreach( $feed_items as $item ){
-		echo "<h2>Item</h2>";
-		$title = $item->get_title();
-		$content = $item->get_content();
-		$description = $item->get_description();
-		$tags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_XML, "description" );
-		$swatches = $item->themeSwatches;
-		$child = $item->child;
+foreach( $feed_items as $item ){
+echo "<h2>Item</h2>";
+$title = $item->get_title();
+$content = $item->get_content();
+	// 	$description = $item->get_description();
+ 	$tags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_XML, "description" );
+	// 	$swatches = $item->themeSwatches;
+	// 	$child = $item->child;
 		echo "<h3>" . $title . "</h3>";
 		echo "<pre>";
-		var_dump($description);
+		var_dump($content);
+		var_dump($tags);
 		echo "</pre>";
-	}
+}
 }
 add_action( 'lblg_above_content_and_sidebars', 'lbcb_get_popular_kuler' );
 
@@ -125,22 +124,11 @@ function lbcb_metaboxes( array $meta_boxes ) {
 		'priority'   => 'high',
 		'show_names' => true, // Show field names on the left
 		'fields'     => array(
-			array(
-				'name' => 'Link',
-				'desc' => 'Where did you find this color scheme?',
-				'id'   => $prefix . 'link',
-				'type' => 'text',
-			),
-			array(
-				'name' => 'Author',
-				'id'   => $prefix . 'author',
-				'type' => 'text_medium',
-			),
-			array(
-				'name' => 'Date',
-				'id'   => $prefix . 'date',
-				'type' => 'text_date',
-			),
+			// array(
+			// 	'name' => 'Swatches',
+			// 	'id'   => $prefix . 'swatches_title',
+			// 	'type' => 'title',
+			// ),
 			array(
 	            'name' => 'Color #1',
 	            'id'   => $prefix . 'color1',
@@ -166,106 +154,43 @@ function lbcb_metaboxes( array $meta_boxes ) {
 	            'id'   => $prefix . 'color5',
 	            'type' => 'colorpicker',
 	        ),
+		),
+	);
+	$meta_boxes[] = array(
+		'id'         => 'lbcb_info_metabox',
+		'title'      => 'Information',
+		'pages'      => array( 'colorbox' ), // Post type
+		'context'    => 'normal',
+		'priority'   => 'high',
+		'show_names' => true, // Show field names on the left
+		'fields'     => array(
 			array(
-				'name' => 'Test Text Area',
-				'desc' => 'field description (optional)',
-				'id'   => $prefix . 'test_textarea',
-				'type' => 'textarea',
+				'name' => 'Link',
+				'desc' => 'Where did you find this color scheme?',
+				'id'   => $prefix . 'link',
+				'type' => 'text',
 			),
 			array(
-				'name' => 'Test Text Area Small',
-				'desc' => 'field description (optional)',
-				'id'   => $prefix . 'test_textareasmall',
-				'type' => 'textarea_small',
-			),
-			array(
-				'name' => 'Test Text Area Code',
-				'desc' => 'field description (optional)',
-				'id'   => $prefix . 'test_textarea_code',
-				'type' => 'textarea_code',
-			),
-			array(
-				'name' => 'Test Title Weeeee',
-				'desc' => 'This is a title description',
-				'id'   => $prefix . 'test_title',
-				'type' => 'title',
-			),
-			array(
-				'name'    => 'Test Select',
-				'desc'    => 'field description (optional)',
-				'id'      => $prefix . 'test_select',
+				'name'    => 'Type',
+				'id'      => $prefix . 'type',
 				'type'    => 'select',
 				'options' => array(
-					array( 'name' => 'Option One', 'value' => 'standard', ),
-					array( 'name' => 'Option Two', 'value' => 'custom', ),
-					array( 'name' => 'Option Three', 'value' => 'none', ),
+					array( 'name' => 'Original work', 'value' => 'original', ),
+					array( 'name' => 'ColourLover', 'value' => 'colourlover', ),
+					array( 'name' => 'Kuler', 'value' => 'kuler', ),
+					array( 'name' => 'StudioPress', 'value' => 'studiopress', ),
+					array( 'name' => 'Other', 'value' => 'other', ),
 				),
 			),
 			array(
-				'name'    => 'Test Radio inline',
-				'desc'    => 'field description (optional)',
-				'id'      => $prefix . 'test_radio_inline',
-				'type'    => 'radio_inline',
-				'options' => array(
-					array( 'name' => 'Option One', 'value' => 'standard', ),
-					array( 'name' => 'Option Two', 'value' => 'custom', ),
-					array( 'name' => 'Option Three', 'value' => 'none', ),
-				),
+				'name' => 'Author',
+				'id'   => $prefix . 'author',
+				'type' => 'text_medium',
 			),
 			array(
-				'name'    => 'Test Radio',
-				'desc'    => 'field description (optional)',
-				'id'      => $prefix . 'test_radio',
-				'type'    => 'radio',
-				'options' => array(
-					array( 'name' => 'Option One', 'value' => 'standard', ),
-					array( 'name' => 'Option Two', 'value' => 'custom', ),
-					array( 'name' => 'Option Three', 'value' => 'none', ),
-				),
-			),
-			array(
-				'name'     => 'Test Taxonomy Radio',
-				'desc'     => 'Description Goes Here',
-				'id'       => $prefix . 'text_taxonomy_radio',
-				'type'     => 'taxonomy_radio',
-				'taxonomy' => '', // Taxonomy Slug
-			),
-			array(
-				'name'     => 'Test Taxonomy Select',
-				'desc'     => 'Description Goes Here',
-				'id'       => $prefix . 'text_taxonomy_select',
-				'type'     => 'taxonomy_select',
-				'taxonomy' => '', // Taxonomy Slug
-			),
-			array(
-				'name' => 'Test Checkbox',
-				'desc' => 'field description (optional)',
-				'id'   => $prefix . 'test_checkbox',
-				'type' => 'checkbox',
-			),
-			array(
-				'name'    => 'Test Multi Checkbox',
-				'desc'    => 'field description (optional)',
-				'id'      => $prefix . 'test_multicheckbox',
-				'type'    => 'multicheck',
-				'options' => array(
-					'check1' => 'Check One',
-					'check2' => 'Check Two',
-					'check3' => 'Check Three',
-				),
-			),
-			array(
-				'name'    => 'Test wysiwyg',
-				'desc'    => 'field description (optional)',
-				'id'      => $prefix . 'test_wysiwyg',
-				'type'    => 'wysiwyg',
-				'options' => array(	'textarea_rows' => 5, ),
-			),
-			array(
-				'name' => 'Test Image',
-				'desc' => 'Upload an image or enter an URL.',
-				'id'   => $prefix . 'test_image',
-				'type' => 'file',
+				'name' => 'Date',
+				'id'   => $prefix . 'date',
+				'type' => 'text_date',
 			),
 		),
 	);
