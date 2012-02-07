@@ -30,9 +30,48 @@
  * **********************************************************************
  */
 
+function lbcb_output_colorbox_post(){
+	global $post;
+	if( 'colorbox' == get_post_type() ){
+		echo "Post ID is: " . $post->ID;
+		$lbcb_post_meta = get_post_meta( $post->ID );
+		echo '<div class="colorbox_wrapper" style="width:95%;border: 1px solid #ccc; padding:5px; margin: 0 auto; height: 150px;">';
+			for( $i = 1; $i <= 5; $i++ ){
+				$c_tmp = '_lbcb_color' . $i;
+				echo '<div style="background: ' . $lbcb_post_meta[$c_tmp][0] . '; height: 100%; width: 20%; float: left;"></div>';
+			}
+		echo '</div>';
+	}
+}
+add_filter( 'the_content', 'lbcb_output_colorbox_post' );
+
+
+
+include( 'include/KulerPHP/Kuler/Api.php' );
+
 $kuler_api_key = "9E7F91134BFC9D170BFB8325C3548076";
-$kuler_api_url = 'http://kuler-api.adobe.com/rss/get.cfm?listtype=';
-$kuler_recent = 'recent&key=';
+
+$kuler = new Kuler_Api( $kuler_api_key );
+
+$recent_t = get_transient( 'recent_kulers' );
+
+if( empty( $recent_t )){
+	//$recent_k = $kuler->get( 'recent' );
+
+	//$recent_array = $kuler->getItems( 'recent' );
+	//echo "<pre>" . var_dump($recent_k[0]) . "</pre>";
+	//set_transient( 'recent_kulers', $recent_k, 60*60*24*2 );
+}
+
+// if( empty( get_transient( 'popular_kulers' ) )){
+// 	$popular_k = $kuler->get( 'popular' );
+// 	set_transient( 'popular_kulers', $popular_k, 60*60*24*2 );
+// }
+// 
+// if( empty( get_transient( 'rating_kulers' ) )){
+// 	$rating_k = $kuler->get( 'rating' );
+// 	set_transient( 'rating_kulers', $rating_k, 60*60*24*2 );
+// }
 
 function lbcb_get_recent_kuler(){
 	//$feed = fetch_feed(  $kuler_api_url . 'recent&key=' . $kuler_api_key );
@@ -51,20 +90,20 @@ function lbcb_get_popular_kuler(){
 	//print_r($feed);
 	$feed_items = $feed->get_items(0,1);
 	
-foreach( $feed_items as $item ){
-echo "<h2>Item</h2>";
-$title = $item->get_title();
-$content = $item->get_content();
-	// 	$description = $item->get_description();
- 	$tags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_XML, "description" );
-	// 	$swatches = $item->themeSwatches;
-	// 	$child = $item->child;
-		echo "<h3>" . $title . "</h3>";
-		echo "<pre>";
-		var_dump($content);
-		var_dump($tags);
-		echo "</pre>";
-}
+// foreach( $feed_items as $item ){
+// echo "<h2>Item</h2>";
+// $title = $item->get_title();
+// $content = $item->get_content();
+// 	// 	$description = $item->get_description();
+//  	$tags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_XML, "description" );
+// 	// 	$swatches = $item->themeSwatches;
+// 	// 	$child = $item->child;
+// 		echo "<h3>" . $title . "</h3>";
+// 		echo "<pre>";
+// 		var_dump($content);
+// 		var_dump($tags);
+// 		echo "</pre>";
+// }
 }
 add_action( 'lblg_above_content_and_sidebars', 'lbcb_get_popular_kuler' );
 
