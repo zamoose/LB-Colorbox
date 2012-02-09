@@ -30,82 +30,71 @@
  * **********************************************************************
  */
 
+include( 'include/KulerPHP/Kuler/Api.php' );
+
 function lbcb_output_colorbox_post(){
 	global $post;
 	if( 'colorbox' == get_post_type() ){
-		echo "Post ID is: " . $post->ID;
 		$lbcb_post_meta = get_post_meta( $post->ID );
-		echo '<div class="colorbox_wrapper" style="width:95%;border: 1px solid #ccc; padding:5px; margin: 0 auto; height: 150px;">';
-			for( $i = 1; $i <= 5; $i++ ){
-				$c_tmp = '_lbcb_color' . $i;
-				echo '<div style="background: ' . $lbcb_post_meta[$c_tmp][0] . '; height: 100%; width: 20%; float: left;"></div>';
-			}
+		$hexes = array();
+		
+		echo '<div class="lbcb-swatch-wrapper">';
+		for( $i = 1; $i <= 5; $i++ ){
+			$c_tmp = '_lbcb_color' . $i;
+			$hex = $lbcb_post_meta[$c_tmp][0];
+			echo '<div class="lbcb-swatch" style="background: ' . $hex . ';"></div>';
+			$hexes[] = $hex;
+		}
+		echo '</div>';
+		
+		echo '<div class="lbcb-hex-wrapper"><span class="hextitle">Hex values:</span> ';
+		echo implode( ', ', $hexes );
 		echo '</div>';
 	}
 }
 add_filter( 'the_content', 'lbcb_output_colorbox_post' );
 
-
-
-include( 'include/KulerPHP/Kuler/Api.php' );
-
-$kuler_api_key = "9E7F91134BFC9D170BFB8325C3548076";
-
-$kuler = new Kuler_Api( $kuler_api_key );
-
-$recent_t = get_transient( 'recent_kulers' );
-
-if( empty( $recent_t )){
-	//$recent_k = $kuler->get( 'recent' );
-
-	//$recent_array = $kuler->getItems( 'recent' );
-	//echo "<pre>" . var_dump($recent_k[0]) . "</pre>";
-	//set_transient( 'recent_kulers', $recent_k, 60*60*24*2 );
-}
-
-// if( empty( get_transient( 'popular_kulers' ) )){
-// 	$popular_k = $kuler->get( 'popular' );
-// 	set_transient( 'popular_kulers', $popular_k, 60*60*24*2 );
-// }
+// $hr_k = array(
+// 	array( 'title' => "Beetle Bus goes Jamba Juice!", "author" => "dianesternberg", "hexes" => array('#730046', '#BFBB11', '#FFC200', '#E88801', '#C93C00')),
+// );
 // 
-// if( empty( get_transient( 'rating_kulers' ) )){
-// 	$rating_k = $kuler->get( 'rating' );
-// 	set_transient( 'rating_kulers', $rating_k, 60*60*24*2 );
-// }
+// $popular_k = array(
+// 	array( 'title' => 'Honey Pot', "author" => 'dezi9er', "hexes" => array( '#105B63', '#FFFAD5', '#FFD34E', '#DB9E36', '#BD4932') ),
+// );
 
-function lbcb_get_recent_kuler(){
-	//$feed = fetch_feed(  $kuler_api_url . 'recent&key=' . $kuler_api_key );
-	
-	$feed = fetch_feed ( 'http://localhost:8888/recent.xml');
-}
+$popular_t = get_transient( 'lbcb_popular_kulers' );
+$recent_t = get_transient( 'lbcb_recent_kulers' );
 
-function lbcb_get_random_kuler(){
-	$feed = fetch_feed( $kuler_api_url . 'random&key=' . $kuler_api_key );
-}
 
-function lbcb_get_popular_kuler(){
-	//$feed = fetch_feed( $kuler_api_url . 'popular&timespan=30&key=' . $kuler_api_key );
-	$feed = fetch_feed( 'http://localhost:8888/popular.xml');
+function lbcb_get_kulers( $kuler_type = "rating" ){
+	$kuler_api_key = "9E7F91134BFC9D170BFB8325C3548076";
+	$kuler = new Kuler_Api( $kuler_api_key );
 	
-	//print_r($feed);
-	$feed_items = $feed->get_items(0,1);
+	$kuler_trans = get_transient( 'lbcb_' . $kuler_type . '_kulers' );
+	if( empty($kuler_trans) ){
+		$kuler_tmp = $kuler->get( $kuler_type );
+		$hr_k = array();
+
+		for( $kuler_tmp as $ra_k ){
+			$swatches = $ra_k->getSwatchesHex();
+
+			$hr_k[] = array(	"title" 	=> $ra_k->title, 
+								"author" 	=> $ra_k->author->authorID,
+								"url"		=> $ra_k->getUrl(),
+								"color1"	=> $hr_swatch[0],
+								"color2"	=> $hr_swatch[1],
+								"color3"	=> $hr_swatch[2],
+								"color4"	=> $hr_swatch[3],
+								"color5"	=> $hr_swatch[4],
+			);
+		}
+
+		$kuler_trans = $hr_k;
+		set_transient( 'lbcb_' . $kuler_type . '_kulers', $kuler_trans, 60*60*24*2 );
+	}
 	
-// foreach( $feed_items as $item ){
-// echo "<h2>Item</h2>";
-// $title = $item->get_title();
-// $content = $item->get_content();
-// 	// 	$description = $item->get_description();
-//  	$tags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_XML, "description" );
-// 	// 	$swatches = $item->themeSwatches;
-// 	// 	$child = $item->child;
-// 		echo "<h3>" . $title . "</h3>";
-// 		echo "<pre>";
-// 		var_dump($content);
-// 		var_dump($tags);
-// 		echo "</pre>";
-// }
+	return $kuler_trans;
 }
-add_action( 'lblg_above_content_and_sidebars', 'lbcb_get_popular_kuler' );
 
 /**
  * 
@@ -248,3 +237,11 @@ function lbcb_initialize_cmb_meta_boxes() {
 
 }
 add_action( 'init', 'lbcb_initialize_cmb_meta_boxes', 9999 );
+
+
+function lbcb_enqueue_styles(){
+	if( !is_admin() && ( 'colorbox' == get_post_type() ) ){
+		wp_enqueue_style( 'lb-colorbox', plugin_dir_url(__FILE__) . 'include/css/lbcb-core.css', '', '', 'screen' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'lbcb_enqueue_styles', 11 );
