@@ -1,0 +1,29 @@
+.lbcb-swatch-wrapper{
+	width: 95%;
+	border: 1px solid #ccc; 
+	padding:5px; 
+	margin: 0 auto; 
+	height: 150px;
+}
+
+.lbcb-mini-swatch-wrapper{
+	width: 75px;
+	height: 10px;
+	border: 1px solid #ccc;
+	padding: 2px;
+}
+
+.lbcb-swatch, .lbcb-mini-swatch{
+	height: 100%; 
+	width: 20%; 
+	float: left;
+}
+
+.lbcb-hex-wrapper{
+	width: 95%;
+	margin: 0 auto;
+}
+
+.hextitle{
+	font-weight: bold;
+}

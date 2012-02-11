@@ -30,6 +30,9 @@
  * **********************************************************************
  */
 
+if( is_admin() ){
+	include( 'include/lib/lbcb-options.php' );
+}
 include( 'include/KulerPHP/Kuler/Api.php' );
 
 function lbcb_output_colorbox_post(){
@@ -47,6 +50,9 @@ function lbcb_output_colorbox_post(){
 		}
 		echo '</div>';
 		
+		echo 	'<div class="lbcb-author-wrapper"><span class="authortitle">Author:</span> ' .
+				$lbcb_post_meta['_lbcb_author'][0] . '</div>';
+		
 		echo '<div class="lbcb-hex-wrapper"><span class="hextitle">Hex values:</span> ';
 		echo implode( ', ', $hexes );
 		echo '</div>';
@@ -54,32 +60,78 @@ function lbcb_output_colorbox_post(){
 }
 add_filter( 'the_content', 'lbcb_output_colorbox_post' );
 
-// $hr_k = array(
-// 	array( 'title' => "Beetle Bus goes Jamba Juice!", "author" => "dianesternberg", "hexes" => array('#730046', '#BFBB11', '#FFC200', '#E88801', '#C93C00')),
-// );
-// 
-// $popular_k = array(
-// 	array( 'title' => 'Honey Pot', "author" => 'dezi9er', "hexes" => array( '#105B63', '#FFFAD5', '#FFD34E', '#DB9E36', '#BD4932') ),
-// );
+function lbcb_kulers_out( $kuler_type = 'rating', $output_type = 'divs' ){
+	$kulers = lbcb_get_kulers( $kuler_type );
+	
+	switch ($output_type) {
+		case 'select':
+			echo '<select id="kulers_select">';
+			
+			foreach($kulers as $kuler){
+				echo '<option value="' . $kuler['title'] . '">' . $kuler['title'] . '<div class="lbcb-mini-swatch-wrapper">';
+				for( $i = 1; $i<= 5; $i++ ){
+					echo '<div class="lbcb-mini-swatch" style="background:' . $kuler['color'.$i] . '"></div>';
+				}
+				echo '</div></option>';
+			}
+			echo '</select>';
+		break;
+		
+		case 'radio':
+			foreach($kulers as $kuler){
+				echo '<input type="radio" value="' . $kuler['title'] . '" id="' . $kuler['title'] . '">' . $kuler['title'] . '<div class="lbcb-mini-swatch-wrapper">';
+				for( $i = 1; $i<= 5; $i++ ){
+					echo '<div class="lbcb-mini-swatch" style="background:' . $kuler['color'.$i] . '"></div>';
+				}
+				echo '</div><br />';
+			}
+		break;
+		
+		case 'table':
+			echo '<table class="lbcb-kuler-table">';
+			echo '<tr><th>Title</th><th>Author</th><th>Swatches</th></tr>';
+			foreach($kulers as $kuler){
+				echo '<tr><td>' . $kuler['title'] . '</td><td>'. $kuler['author'] . '</td><td><div class="lbcb-mini-swatch-wrapper">';
+				for( $i = 1; $i<= 5; $i++ ){
+					echo '<div class="lbcb-mini-swatch" style="background:' . $kuler['color'.$i] . '"></div>';
+				}
+				echo '</div></td></tr>';
+			}
+			echo '</table>';
+		break;
+		case 'divs':
+		default:
+			foreach($kulers as $kuler){
+				echo '<div class="lbcb-kuler">Title: ' . $kuler['title'];
+				echo '<div class="lbcb-mini-swatch-wrapper">';
+				for( $i = 1; $i<= 5; $i++ ){
+					echo '<div class="lbcb-mini-swatch" style="background:' . $kuler['color'.$i] . '"></div>';
+				}
+				echo '</div></div>';
+			}
+		break;
+	}
+}
 
-$popular_t = get_transient( 'lbcb_popular_kulers' );
-$recent_t = get_transient( 'lbcb_recent_kulers' );
-
+// lbcb_kulers_out('rating','radio');
+// lbcb_kulers_out('popular','table');
+// lbcb_kulers_out('recent','divs');
 
 function lbcb_get_kulers( $kuler_type = "rating" ){
-	$kuler_api_key = "9E7F91134BFC9D170BFB8325C3548076";
-	$kuler = new Kuler_Api( $kuler_api_key );
-	
 	$kuler_trans = get_transient( 'lbcb_' . $kuler_type . '_kulers' );
+
 	if( empty($kuler_trans) ){
+		$kuler_api_key = "9E7F91134BFC9D170BFB8325C3548076";
+		$kuler = new Kuler_Api( $kuler_api_key );
+		
 		$kuler_tmp = $kuler->get( $kuler_type );
 		$hr_k = array();
 
-		for( $kuler_tmp as $ra_k ){
-			$swatches = $ra_k->getSwatchesHex();
+		foreach( $kuler_tmp as $ra_k ){
+			$hr_swatch = $ra_k->getSwatchesHex();
 
-			$hr_k[] = array(	"title" 	=> $ra_k->title, 
-								"author" 	=> $ra_k->author->authorID,
+			$hr_k[] = array(	"title" 	=> $ra_k->getTitle(), 
+								"author" 	=> $ra_k->getAuthorID(),
 								"url"		=> $ra_k->getUrl(),
 								"color1"	=> $hr_swatch[0],
 								"color2"	=> $hr_swatch[1],
@@ -90,11 +142,22 @@ function lbcb_get_kulers( $kuler_type = "rating" ){
 		}
 
 		$kuler_trans = $hr_k;
-		set_transient( 'lbcb_' . $kuler_type . '_kulers', $kuler_trans, 60*60*24*2 );
+		set_transient( 'lbcb_' . $kuler_type . '_kulers', $kuler_trans, 60*60*24*5 );
 	}
 	
 	return $kuler_trans;
 }
+
+$ratedk = get_transient( 'lbcb_rating_kulers' );
+
+
+function lbcb_insert_colorbox( $colorbox = array() ){
+	$post = array(
+		'post_type'		=> 'colorbox',
+		'post_title'	=> $colorbox['title'],
+	);
+}
+
 
 /**
  * 
@@ -152,11 +215,6 @@ function lbcb_metaboxes( array $meta_boxes ) {
 		'priority'   => 'high',
 		'show_names' => true, // Show field names on the left
 		'fields'     => array(
-			// array(
-			// 	'name' => 'Swatches',
-			// 	'id'   => $prefix . 'swatches_title',
-			// 	'type' => 'title',
-			// ),
 			array(
 	            'name' => 'Color #1',
 	            'id'   => $prefix . 'color1',
