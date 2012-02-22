@@ -35,30 +35,68 @@ if( is_admin() ){
 }
 include( 'include/KulerPHP/Kuler/Api.php' );
 
-function lbcb_output_colorbox_post(){
+function lbcb_output_colorbox_post( $content ){
 	global $post;
+	$cb_content = '';
+	
 	if( 'colorbox' == get_post_type() ){
-		$lbcb_post_meta = get_post_meta( $post->ID );
-		$hexes = array();
+		 lbcb_kulers_out('rating','radio');
+		 		lbcb_kulers_out('popular','table');
+		 		lbcb_kulers_out('recent','divs');
 		
-		echo '<div class="lbcb-swatch-wrapper">';
+		$hexes = array();
+		$lbcb_author = get_post_meta( $post->ID, '_lbcb_author', true);
+		
+		
+		$cb_content .= '<div class="lbcb-swatch-wrapper">' . "\n";
 		for( $i = 1; $i <= 5; $i++ ){
 			$c_tmp = '_lbcb_color' . $i;
-			$hex = $lbcb_post_meta[$c_tmp][0];
-			echo '<div class="lbcb-swatch" style="background: ' . $hex . ';"></div>';
+			$hex = $lbcb_post_meta = get_post_meta( $post->ID, $c_tmp, true );
+			$cb_content .= '<div class="lbcb-swatch" style="background: ' . $hex . ';"></div>' . "\n";
 			$hexes[] = $hex;
 		}
-		echo '</div>';
+		$cb_content .= '</div><!-- .lbcb-swatch-wrapper -->' . "\n";
+		$cb_content .= '<div class="lbcb-meta-wrapper">' . "\n";
+		$cb_content .= '<div class="lbcb-author-wrapper"><span class="authortitle">Author:</span> ' . $lbcb_author . '</div>' . "\n";
+		$cb_content .= '<div class="lbcb-hex-wrapper"><span class="hextitle">Hex values:</span> ' . implode( ', ', $hexes ) . '</div>' . "\n";
+		$cb_content .= '</div><!-- .lbcb-meta-wrapper -->' . "\n";
 		
-		echo 	'<div class="lbcb-author-wrapper"><span class="authortitle">Author:</span> ' .
-				$lbcb_post_meta['_lbcb_author'][0] . '</div>';
-		
-		echo '<div class="lbcb-hex-wrapper"><span class="hextitle">Hex values:</span> ';
-		echo implode( ', ', $hexes );
-		echo '</div>';
+		if( is_archive() ){
+					//echo $cb_content;
+		}else{
+			$content = $cb_content . $content;
+		}
 	}
+	return $content;
 }
 add_filter( 'the_content', 'lbcb_output_colorbox_post' );
+
+function lbcb_swatches( $cb_size = "regular", $cb_echo = true ){
+	global $post;
+	$cb_content = '';
+	
+	if( "regular" == $cb_size){
+		$cb_content .= '<div class="lbcb-swatch-wrapper">' . "\n";
+	}else{
+		$cb_content .= '<div class="lbcb-mini-swatch-wrapper">' . "\n";
+	}
+	
+	for( $i = 1; $i <= 5; $i++ ){
+		$c_tmp = '_lbcb_color' . $i;
+		$hex = get_post_meta( $post->ID, $c_tmp, true );
+		$cb_content .= '<div class="lbcb-swatch" style="background: ' . $hex . ';"></div>' . "\n";
+	}
+	
+	$cb_content .= '</div>';
+	
+	if( $cb_echo ){
+		echo $cb_content;
+	}else{
+		return $cb_content;
+	}
+	
+	return;
+}
 
 function lbcb_kulers_out( $kuler_type = 'rating', $output_type = 'divs' ){
 	$kulers = lbcb_get_kulers( $kuler_type );
@@ -113,10 +151,6 @@ function lbcb_kulers_out( $kuler_type = 'rating', $output_type = 'divs' ){
 	}
 }
 
-// lbcb_kulers_out('rating','radio');
-// lbcb_kulers_out('popular','table');
-// lbcb_kulers_out('recent','divs');
-
 function lbcb_get_kulers( $kuler_type = "rating" ){
 	$kuler_trans = get_transient( 'lbcb_' . $kuler_type . '_kulers' );
 
@@ -131,7 +165,7 @@ function lbcb_get_kulers( $kuler_type = "rating" ){
 			$hr_swatch = $ra_k->getSwatchesHex();
 
 			$hr_k[] = array(	"title" 	=> $ra_k->getTitle(), 
-								"author" 	=> $ra_k->getAuthorID(),
+								"author" 	=> $ra_k->getAuthorLabel(),
 								"url"		=> $ra_k->getUrl(),
 								"color1"	=> $hr_swatch[0],
 								"color2"	=> $hr_swatch[1],
@@ -140,7 +174,7 @@ function lbcb_get_kulers( $kuler_type = "rating" ){
 								"color5"	=> $hr_swatch[4],
 			);
 		}
-
+		
 		$kuler_trans = $hr_k;
 		set_transient( 'lbcb_' . $kuler_type . '_kulers', $kuler_trans, 60*60*24*5 );
 	}
@@ -148,14 +182,31 @@ function lbcb_get_kulers( $kuler_type = "rating" ){
 	return $kuler_trans;
 }
 
-$ratedk = get_transient( 'lbcb_rating_kulers' );
+$ratedk = lbcb_get_kulers( 'rating' );
 
+foreach($ratedk as $rks){
+	//var_dump($rks);
+	//lbcb_insert_colorbox( $rks );
+}
 
 function lbcb_insert_colorbox( $colorbox = array() ){
+	//$lbcb_query = new WP_Query( array('post_type' => 'colorbox', '') );
 	$post = array(
 		'post_type'		=> 'colorbox',
 		'post_title'	=> $colorbox['title'],
+		'post_status'	=> 'draft',
 	);
+	
+	$cb_ID = wp_insert_post( $post );
+	if( $cb_ID != 0 ){
+		add_post_meta( $cb_ID, '_lbcb_author', $colorbox['author'], true );
+		add_post_meta( $cb_ID, '_lbcb_url', $colorbox['url'], true );
+		add_post_meta( $cb_ID, '_lbcb_color1', $colorbox['color1'], true );
+		add_post_meta( $cb_ID, '_lbcb_color2', $colorbox['color2'], true );
+		add_post_meta( $cb_ID, '_lbcb_color3', $colorbox['color3'], true );
+		add_post_meta( $cb_ID, '_lbcb_color4', $colorbox['color4'], true );
+		add_post_meta( $cb_ID, '_lbcb_color5', $colorbox['color5'], true );
+	}
 }
 
 
@@ -298,8 +349,9 @@ add_action( 'init', 'lbcb_initialize_cmb_meta_boxes', 9999 );
 
 
 function lbcb_enqueue_styles(){
-	if( !is_admin() && ( 'colorbox' == get_post_type() ) ){
+	if( ( 'colorbox' == get_post_type() ) ){
 		wp_enqueue_style( 'lb-colorbox', plugin_dir_url(__FILE__) . 'include/css/lbcb-core.css', '', '', 'screen' );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'lbcb_enqueue_styles', 11 );
+add_action( 'admin_print_styles', 'lbcb_enqueue_styles', 11 );

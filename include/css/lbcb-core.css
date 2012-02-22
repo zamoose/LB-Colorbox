@@ -11,19 +11,23 @@
 	height: 10px;
 	border: 1px solid #ccc;
 	padding: 2px;
+	background: #fff;
 }
 
-.lbcb-swatch, .lbcb-mini-swatch{
+.lbcb-swatch,
+.lbcb-mini-swatch{
 	height: 100%; 
 	width: 20%; 
 	float: left;
 }
 
-.lbcb-hex-wrapper{
-	width: 95%;
+.lbcb-meta-wrapper {
 	margin: 0 auto;
+	padding: 1.75em 0 1.75em 0;
+	width: 95%;
 }
 
+.authortitle,
 .hextitle{
 	font-weight: bold;
 }
