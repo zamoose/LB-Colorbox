@@ -31,7 +31,7 @@
  */
 
 if( is_admin() ){
-	include( 'include/lib/lbcb-options.php' );
+	include( 'include/lbcb-options.php' );
 }
 include( 'include/KulerPHP/Kuler/Api.php' );
 
