@@ -1,12 +1,12 @@
-plugin_=== Plugin Name ===
-Contributors: Zamoose
-Donate link: url
-Tags: tags
+=== Plugin Name ===
+Contributors: ZaMoose
+Donate link: htttp://literalbarrage.org/blog/code/lb-colorbox
+Tags: colors, swatches, Kuler
 Requires at least: 3.3
 Tested up to: 3.3.1
-Stable tag: stable_tag
+Stable tag: 0.5
  
-Here is a short description of the plugin.  This should be no more than 150 chars.  No markup here.
+Collect and share color swatches, then use them in themes. Easy peasy.
 
 == Description ==
 

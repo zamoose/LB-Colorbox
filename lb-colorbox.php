@@ -30,6 +30,8 @@
  * **********************************************************************
  */
 
+//$lbcb_options = get_option( 'lbcb_options' );
+
 if( is_admin() ){
 	include( 'include/lbcb-options.php' );
 }

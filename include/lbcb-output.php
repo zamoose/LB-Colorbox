@@ -1,4 +1,17 @@
 <?php
+/**
+ * LB Colorbox Output Functions
+ *
+ * @package		LB-Colorbox
+ * @copyright	Copyright (c) 2012, Doug Stewart
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
+ *
+ * @since 		LB-Colorbox 0.5
+ *
+ * Useful functions for getting the colorboxes out of WordPress and into the real world.
+ *
+ */
+
 function lbcb_output_colorbox_post( $content ){
 	global $post;
 	$cb_content = '';
@@ -22,7 +35,7 @@ function lbcb_output_colorbox_post( $content ){
 		$cb_content .= '</div><!-- .lbcb-meta-wrapper -->' . "\n";
 		
 		if( is_archive() ){
-					//echo $cb_content;
+			echo $cb_content;
 		}else{
 			$content = $cb_content . $content;
 		}
@@ -30,7 +43,7 @@ function lbcb_output_colorbox_post( $content ){
 	return $content;
 }
 add_filter( 'the_content', 'lbcb_output_colorbox_post' );
-add_filter( 'the_excerpt', 'lbcb_output_colorbox_post' );
+//add_filter( 'the_excerpt', 'lbcb_output_colorbox_post' );
 
 
 function lbcb_swatches( $cb_size = "regular", $cb_echo = true ){

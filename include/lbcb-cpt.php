@@ -1,7 +1,19 @@
 <?php
+/**
+ * LB Colorbox Custom Post Type
+ *
+ * @package		LB-Colorbox
+ * @copyright	Copyright (c) 2012, Doug Stewart
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
+ *
+ * @since 		LB-Colorbox 0.5
+ *
+ * Register the ColorBox Custom Post Type (CPT) and handle the CPT post screen
+ * interface via Custom Metaboxes.
+ */
 
 /**
- * 
+ * Register the ColorBox CPT
  */
 function lbcb_add_colorbox_cpt(){
 	register_post_type('ColorBox', 
@@ -138,7 +150,6 @@ function lbcb_initialize_cmb_meta_boxes() {
 add_action( 'init', 'lbcb_initialize_cmb_meta_boxes', 9999 );
 
 function lbcb_insert_colorbox( $colorbox = array() ){
-	//$lbcb_query = new WP_Query( array('post_type' => 'colorbox', '') );
 	$post = array(
 		'post_type'		=> 'colorbox',
 		'post_title'	=> $colorbox['title'],
