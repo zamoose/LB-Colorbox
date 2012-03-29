@@ -31,3 +31,19 @@
 .hextitle{
 	font-weight: bold;
 }
+
+.swatch-icon32-color {
+	background: transparent url('../images/swatch32-color.png') no-repeat;
+}
+
+.swatch-icon32-greyscale {
+	background: transparent url('../images/swatch32-greyscale.png') no-repeat;
+}
+
+.kuler-icon36 {
+	float: left;
+	height: 36px;
+	margin: 7px 8px 0 0;
+	width: 38px;
+	background: transparent url('../images/ku_36pxBugOnly.png') no-repeat;
+}

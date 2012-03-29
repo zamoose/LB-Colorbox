@@ -2,13 +2,13 @@
 /**
  * LB Colorbox Output Functions
  *
+ * Useful functions for getting the colorboxes out of WordPress and into the real world.
+ *
  * @package		LB-Colorbox
  * @copyright	Copyright (c) 2012, Doug Stewart
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
  *
  * @since 		LB-Colorbox 0.5
- *
- * Useful functions for getting the colorboxes out of WordPress and into the real world.
  *
  */
 

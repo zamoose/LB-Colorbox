@@ -2,14 +2,15 @@
 /**
  * LB Colorbox Custom Post Type
  *
+ * Register the ColorBox Custom Post Type (CPT) and handle the CPT post screen
+ * interface via Custom Metaboxes.
+ *
  * @package		LB-Colorbox
  * @copyright	Copyright (c) 2012, Doug Stewart
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
  *
  * @since 		LB-Colorbox 0.5
  *
- * Register the ColorBox Custom Post Type (CPT) and handle the CPT post screen
- * interface via Custom Metaboxes.
  */
 
 /**

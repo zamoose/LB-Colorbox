@@ -1,35 +1,60 @@
 <?php
 /**
+ * LB Colorbox Kuler Helper Functions
+ *
+ * Retrieval and display of Kuler API results are encapsulated in this file
+ *
+ * @package		LB-Colorbox
+ * @copyright	Copyright (c) 2012, Doug Stewart
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
+ *
+ * @since 		LB-Colorbox 0.5
+ *
+ */
+
+
+/**
  * Responsible for retrieving Kuler swatches from Adobe's API.
+ *
+ * @param string $kuler_type
+ * @return array
  */
 function lbcb_get_kulers( $kuler_type = "rating" ){
+	set_exception_handler( 'lbcb_error_handler' );
+
 	$kuler_trans = get_transient( 'lbcb_' . $kuler_type . '_kulers' );
 
 	if( empty($kuler_trans) ){
-		$kuler_api_key = "9E7F91134BFC9D170BFB8325C3548076";
-		$kuler = new Kuler_Api( $kuler_api_key );
+		$lbcb_options = get_option( 'lbcb_options' );
+		$kuler_api_key = $lbcb_options['kuler_api_key'];
+
+		if( !empty( $kuler_api_key ) ){
+			$kuler = new Kuler_Api( $kuler_api_key );
 		
-		$kuler_tmp = $kuler->get( $kuler_type );
-		$hr_k = array();
+			$kuler_tmp = $kuler->get( $kuler_type );
+			$hr_k = array();
 
-		foreach( $kuler_tmp as $ra_k ){
-			$hr_swatch = $ra_k->getSwatchesHex();
+			foreach( $kuler_tmp as $ra_k ){
+				$hr_swatch = $ra_k->getSwatchesHex();
 
-			$hr_k[] = array(	"title" 	=> $ra_k->getTitle(), 
-								"author" 	=> $ra_k->getAuthorLabel(),
-								"url"		=> $ra_k->getUrl(),
-								"color1"	=> $hr_swatch[0],
-								"color2"	=> $hr_swatch[1],
-								"color3"	=> $hr_swatch[2],
-								"color4"	=> $hr_swatch[3],
-								"color5"	=> $hr_swatch[4],
-			);
+				$hr_k[] = array(	"title" 	=> $ra_k->getTitle(), 
+									"author" 	=> $ra_k->getAuthorLabel(),
+									"url"		=> $ra_k->getUrl(),
+									"color1"	=> $hr_swatch[0],
+									"color2"	=> $hr_swatch[1],
+									"color3"	=> $hr_swatch[2],
+									"color4"	=> $hr_swatch[3],
+									"color5"	=> $hr_swatch[4],
+									//"ID"		=> $ra_k->get->theme->ID,
+				);
+			}
+		
+			$kuler_trans = $hr_k;
+			set_transient( 'lbcb_' . $kuler_type . '_kulers', $kuler_trans, 60*60*24*5 );
 		}
-		
-		$kuler_trans = $hr_k;
-		set_transient( 'lbcb_' . $kuler_type . '_kulers', $kuler_trans, 60*60*24*5 );
 	}
 	
+	restore_exception_handler();
 	return $kuler_trans;
 }
 
@@ -65,9 +90,10 @@ function lbcb_kulers_out( $kuler_type = 'rating', $output_type = 'divs' ){
 		
 		case 'table':
 			echo '<table class="lbcb-kuler-table">';
-			echo '<tr><th>Title</th><th>Author</th><th>Swatches</th></tr>';
+			echo '<tr><th>Title</th><th>Author</th><th>Link</th><th>Swatches</th></tr>';
 			foreach($kulers as $kuler){
-				echo '<tr><td>' . $kuler['title'] . '</td><td>'. $kuler['author'] . '</td><td><div class="lbcb-mini-swatch-wrapper">';
+				echo '<tr><td>' . $kuler['title'] . '</td><td>'. $kuler['author'] . '</td>';
+				echo '<td>' . make_clickable($kuler['url']) . '</td><td><div class="lbcb-mini-swatch-wrapper">';
 				for( $i = 1; $i<= 5; $i++ ){
 					echo '<div class="lbcb-mini-swatch" style="background:' . $kuler['color'.$i] . '"></div>';
 				}
@@ -87,4 +113,17 @@ function lbcb_kulers_out( $kuler_type = 'rating', $output_type = 'divs' ){
 			}
 		break;
 	}
+}
+
+/**
+ * The Kuler library doesn't do a good job of catching its exceptions.
+ * This helps out and at least prints a semi-useful message to the end user.
+ */
+function lbcb_error_handler( $exception ){
+	echo "<b>Kuler Error:</b> " . $exception->getTrace() . $exception->getMessage() . "\n";
+	echo "<pre>";
+	print_r($exception );
+	echo "</pre>";
+	
+	return;
 }
