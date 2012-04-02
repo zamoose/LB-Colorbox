@@ -23,6 +23,7 @@ function lbcb_add_colorbox_cpt(){
 				'public' => true,
 				'show_ui' => true,
 				'show_in_menu' => true,
+				'menu_icon' => plugin_dir_url() . '/lbcb/include/images/swatch16-greyscale.png',
 				'capability_type' => 'post',
 				'hierarchical' => false,
 				'rewrite' => array('slug' => ''),

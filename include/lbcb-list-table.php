@@ -37,7 +37,7 @@ class LBCB_Kuler_List_Table extends WP_List_Table {
 	 */
 	function column_title( $item ){
 		$actions = array(
-			'save'	=> sprintf('<a href="?page=%s&post_type=colorbox&action=%s&kuler=%s">Save</a>',$_REQUEST['page'],'save',$item['ID']),
+			'save'	=> sprintf('<a href="?page=%s&post_type=colorbox&action=%s&kuler=%s">Save</a>',$_REQUEST['page'],'save',urlencode($item['url'])),
 		);
 		
 		return sprintf('%1$s %2$s',

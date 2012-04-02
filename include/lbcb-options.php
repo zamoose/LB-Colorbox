@@ -66,6 +66,9 @@ function lbcb_options_page(){
 <?php
 }
 
+/**
+ * Callback to display table of highest-rated Kulers.
+ */
 function lbcb_rating_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
 	
@@ -82,7 +85,9 @@ function lbcb_rating_kulers_page() {
 <?php
 }
 
-
+/**
+ * Callback to display table of popular Kulers.
+ */
 function lbcb_popular_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
 	
@@ -99,6 +104,9 @@ function lbcb_popular_kulers_page() {
 <?php
 }
 
+/**
+ * Callback to display table of recent Kulers.
+ */
 function lbcb_recent_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
 	
@@ -115,6 +123,9 @@ function lbcb_recent_kulers_page() {
 <?php
 }
 
+/**
+ * Callback to display table of random Kulers.
+ */
 function lbcb_random_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
 	
@@ -144,12 +155,25 @@ function lbcb_print_kuler_api( $name ){
 	<?php
 }
 
+/**
+ * Callback to output the input to get the number of Kulers
+ * the user wants to retrieve
+ *
+ * @param string $name
+ */
 function lbcb_print_kuler_num( $name ) {
 	$lbcb_options = get_option( 'lbcb_options' );
+	$num_k = ( empty($lbcb_options['num_kulers']) ? 20 : $lbcb_options['num_kulers'] );
 	?>
 	<select name="lbcb_options[num_kulers]" id="lbcb_options[num_kulers]">
-	
+	<?php
+		for( $i = 10; $i <= 100; $i += 10 ){
+			$selected = ( $num_k == $i ? 'selected="selected"' : '' );
+			echo "<option value=\"$i\"$selected>$i</option>\n";
+		}
+	?>
 	</select>
+	<span class="description">The number of Kulers to retrieve from the Kuler API. Defaults to 20.</span>
 	<?php
 }
 
@@ -174,6 +198,7 @@ function lbcb_options_validate( $input ){
 	$valid_input = get_option( 'lbcb_options' );
 	
 	$valid_input['kuler_api_key'] = esc_html( $input['kuler_api_key'] );
+	$valid_input['num_kulers'] = (int) $input['num_kulers']; 
 	
 	return $valid_input;
 }
@@ -244,3 +269,13 @@ function lbcb_show_swatch_column( $name ){
 	}
 }
 add_filter( 'manage_posts_custom_column', 'lbcb_show_swatch_column' );
+
+
+function lbcb_process_kulers_ajax(){
+	if( isset( $_POST["kuler"]) && ( $_POST["post_type"] == "colorbox" ) && ( $_POST["action"] == "save" ) ){
+		$response = urldecode($_POST["kuler"]);
+		echo $response;
+		die();
+	}
+}
+add_action( 'wp_ajax_lbcb_kuler_response', 'lbcb_process_kulers_ajax' );
