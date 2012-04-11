@@ -60,6 +60,9 @@ function lbcb_get_kulers( $kuler_type = "rating" ){
 
 /**
  * Responsible for outputting a given set of Kulers.
+ *
+ * @param string $kuler_type
+ * @param string $output_type
  */
 function lbcb_kulers_out( $kuler_type = 'rating', $output_type = 'divs' ){
 	$kulers = lbcb_get_kulers( $kuler_type );
@@ -118,12 +121,12 @@ function lbcb_kulers_out( $kuler_type = 'rating', $output_type = 'divs' ){
 /**
  * The Kuler library doesn't do a good job of catching its exceptions.
  * This helps out and at least prints a semi-useful message to the end user.
+ *
+ * @param object $exception
  */
 function lbcb_error_handler( $exception ){
-	echo "<b>Kuler Error:</b> " . $exception->getTrace() . $exception->getMessage() . "\n";
-	echo "<pre>";
-	print_r($exception );
-	echo "</pre>";
-	
+	echo "<div class=\"wrap\"><h2>Kuler Error</h2>";
+	echo "<pre><code>" . $exception->getMessage() . "</code></pre>\n";
+	echo "<p>This is most likely due to an inability to connect to Adobe's servers. Please check your Internet connection.</p></div>";
 	return;
 }

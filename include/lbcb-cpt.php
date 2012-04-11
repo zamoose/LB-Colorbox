@@ -23,7 +23,7 @@ function lbcb_add_colorbox_cpt(){
 				'public' => true,
 				'show_ui' => true,
 				'show_in_menu' => true,
-				'menu_icon' => plugin_dir_url() . '/lbcb/include/images/swatch16-greyscale.png',
+				'menu_icon' => plugin_dir_url(__FILE__) . '/images/swatch16-greyscale.png',
 				'capability_type' => 'post',
 				'hierarchical' => false,
 				'rewrite' => array('slug' => ''),
@@ -84,6 +84,7 @@ function lbcb_metaboxes( array $meta_boxes ) {
 	            'name' => 'Color #3',
 	            'id'   => $prefix . 'color3',
 	            'type' => 'colorpicker',
+				'std'  => '#ccc',
 	        ),
 			array(
 	            'name' => 'Color #4',
@@ -120,6 +121,7 @@ function lbcb_metaboxes( array $meta_boxes ) {
 					array( 'name' => 'ColourLover', 'value' => 'colourlover', ),
 					array( 'name' => 'Kuler', 'value' => 'kuler', ),
 					array( 'name' => 'StudioPress', 'value' => 'studiopress', ),
+					array( 'name' => 'Colllor', 'value' => 'colllor', ),
 					array( 'name' => 'Other', 'value' => 'other', ),
 				),
 			),
@@ -136,7 +138,8 @@ function lbcb_metaboxes( array $meta_boxes ) {
 		),
 	);
 
-	// Add other metaboxes as needed
+
+// Add other metaboxes as needed
 
 	return $meta_boxes;
 
@@ -159,6 +162,7 @@ function lbcb_insert_colorbox( $colorbox = array() ){
 	);
 	
 	$cb_ID = wp_insert_post( $post );
+	
 	if( $cb_ID != 0 ){
 		add_post_meta( $cb_ID, '_lbcb_author', $colorbox['author'], true );
 		add_post_meta( $cb_ID, '_lbcb_url', $colorbox['url'], true );

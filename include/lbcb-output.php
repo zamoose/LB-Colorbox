@@ -12,6 +12,12 @@
  *
  */
 
+/**
+ * Output the complete contents of a Colorbox swatch custom post
+ *
+ * @param string $content
+ * @return string $content
+ */
 function lbcb_output_colorbox_post( $content ){
 	global $post;
 	$cb_content = '';
@@ -43,9 +49,14 @@ function lbcb_output_colorbox_post( $content ){
 	return $content;
 }
 add_filter( 'the_content', 'lbcb_output_colorbox_post' );
-//add_filter( 'the_excerpt', 'lbcb_output_colorbox_post' );
 
-
+/**
+ * Output a specific set of Colorbox color swatches.
+ *
+ * @param string $cb_size The requested size of the swatch output
+ * @param string $cb_echo Whether to output the swatch or return it
+ * @return string $cb_content
+ */
 function lbcb_swatches( $cb_size = "regular", $cb_echo = true ){
 	global $post;
 	$cb_content = '';
@@ -72,3 +83,21 @@ function lbcb_swatches( $cb_size = "regular", $cb_echo = true ){
 	
 	return;
 }
+
+/**
+ * Shortcode to generate Colorbox swatches
+ *
+ * @param array $atts
+ */
+function lbcb_colorbox_shortcode( $atts ){
+	extract( shortcode_atts( array(
+			'size'	=> 'regular',
+			'name'	=> '',
+			'slug'	=> '',
+			'id'	=> '',
+			
+			), $atts
+	));
+	echo "Colorbox!";
+}
+add_shortcode( 'colorbox', 'lbcb_colorbox_shortcode' );

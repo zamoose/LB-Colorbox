@@ -250,6 +250,7 @@ function lbcb_show_swatch_column( $name ){
 				break;
 				case "original":
 					echo "Original work";
+				break;
 				case "colllor":
 					echo "Colllor";
 				break;

@@ -10,13 +10,6 @@
  *
  * @since 		LB-Colorbox 0.5
  */
-
-
-/**
- * A class which extends WP_List_Table and implements
- * functionality for displaying Kulers.
- *
- */
 class LBCB_Kuler_List_Table extends WP_List_Table {
 	/**
 	 * Constructor
