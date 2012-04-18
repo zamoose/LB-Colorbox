@@ -146,6 +146,9 @@ function lbcb_metaboxes( array $meta_boxes ) {
 }
 add_filter( 'cmb_meta_boxes', 'lbcb_metaboxes' );
 
+/**
+ * Initialize the CMB meta boxes.
+ */
 function lbcb_initialize_cmb_meta_boxes() {
 
 	if ( ! class_exists( 'cmb_Meta_Box' ) )
@@ -154,6 +157,9 @@ function lbcb_initialize_cmb_meta_boxes() {
 }
 add_action( 'init', 'lbcb_initialize_cmb_meta_boxes', 9999 );
 
+/**
+ * Insert colorbox into the CPTs.
+ */
 function lbcb_insert_colorbox( $colorbox = array() ){
 	$post = array(
 		'post_type'		=> 'colorbox',
@@ -163,7 +169,16 @@ function lbcb_insert_colorbox( $colorbox = array() ){
 	
 	$cb_ID = wp_insert_post( $post );
 	
+	$cb_types = array( 'original', 'colourlover', 'studiopress', 'kuler', 'colllor', 'other' );
+	
+	if( in_array( $colorbox['type'], $types) ){
+		$lbcb_type = $colorbox['type'];
+	}else{
+		$lbcb_type = 'other';
+	}
+	
 	if( $cb_ID != 0 ){
+		add_post_meta( $cb_ID, '_lbcb_type', $lbcb_type, true );
 		add_post_meta( $cb_ID, '_lbcb_author', $colorbox['author'], true );
 		add_post_meta( $cb_ID, '_lbcb_url', $colorbox['url'], true );
 		add_post_meta( $cb_ID, '_lbcb_color1', $colorbox['color1'], true );

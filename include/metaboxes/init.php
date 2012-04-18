@@ -1,11 +1,12 @@
 <?php
-/*
-Script Name: 	Custom Metaboxes and Fields
-Contributors: 	Andrew Norcross (@norcross / andrewnorcross.com)
-				Jared Atchison (@jaredatch / jaredatchison.com)
-				Bill Erickson (@billerickson / billerickson.net)
-Description: 	This will create metaboxes with custom fields that will blow your mind.
-Version: 		0.9
+/**
+ *	Script Name: 	Custom Metaboxes and Fields
+ *	Contributors: 	Andrew Norcross (@norcross / andrewnorcross.com)
+ *					Jared Atchison (@jaredatch / jaredatchison.com)
+ *					Bill Erickson (@billerickson / billerickson.net)
+ *	Description: 	This will create metaboxes with custom fields that will blow your mind.
+ *	Version: 		0.9
+ *	@package		Custom-Meta-Boxes
 */
 
 /**
@@ -42,6 +43,8 @@ foreach ( $meta_boxes as $meta_box ) {
  * Validate value of meta fields
  * Define ALL validation methods inside this class and use the names of these 
  * methods in the definition of meta boxes (key 'validate_func' of each field)
+ * 
+ * @package	Custom-Meta-Boxes
  */
 class cmb_Meta_Box_Validate {
 	function check_text( $text ) {
@@ -56,11 +59,15 @@ class cmb_Meta_Box_Validate {
  * Defines the url to which is used to load local resources.
  * This may need to be filtered for local Window installations.
  * If resources do not load, please check the wiki for details.
+ *
+ * @package	Custom-Meta-Boxes
  */
 define( 'CMB_META_BOX_URL', apply_filters( 'cmb_meta_box_url', trailingslashit( str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, dirname( __FILE__ ) ) ) ) );
 
 /**
  * Create meta boxes
+ *
+ * @package	Custom-Meta-Boxes
  */
 class cmb_Meta_Box {
 	protected $_meta_box;

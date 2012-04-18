@@ -12,24 +12,10 @@ Collect and share color swatches, then use them in themes. Easy peasy.
 
 Collect color schemes. Use 'em, display 'em, go nuts.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+LB Colorbox is a new way to collect color schemes and tuck them away inside of WordPress for safe keeping. If you've ever admired the palettes available at [ColourLovers](http://www.colourlovers.com/), [StudioPress](http://www.studiopress.com/palettes), [Colllor](http://colllor.com) or elsewhere, you can now recreate that functionality from the safety of your own WordPress home.
 
-A few notes about the sections above:
-
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
-
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
-
+You can also directly import color schemes from Adobe's [Kuler service](http://kuler.adobe.com/). You'll need to apply for a [Kuler API key](http://kuler.adobe.com/api/) in order to use this feature, but once you've done so, a wealth of options are available to you.
 == Installation ==
-
-
 
 1. Upload the `lb-colorbox/` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
@@ -38,9 +24,9 @@ you put the stable version, in order to eliminate any doubt.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Where are the settings? =
 
-An answer to that question.
+Under Settings->ColorBox
 
 = What about foo bar? =
 

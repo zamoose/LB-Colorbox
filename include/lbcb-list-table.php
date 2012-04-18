@@ -30,7 +30,7 @@ class LBCB_Kuler_List_Table extends WP_List_Table {
 	 */
 	function column_title( $item ){
 		$actions = array(
-			'save'	=> sprintf('<a href="?page=%s&post_type=colorbox&action=%s&kuler=%s">Save</a>',$_REQUEST['page'],'save',urlencode($item['url'])),
+			'save'	=> sprintf('<a href="?page=%s&post_type=colorbox&action=%s&kuler=%s">Save</a>',$_REQUEST['page'],'savekuler',urlencode($item['url'])),
 		);
 		
 		return sprintf('%1$s %2$s',
@@ -75,25 +75,40 @@ class LBCB_Kuler_List_Table extends WP_List_Table {
 		return $swatches;
 	}
 	
+	/**
+	 * Returns the columns for list view display
+	 *
+	 * @return array Column headers
+	 */
 	function get_columns() {
 		$columns = array(
 			'title'		=> 'Title',
+			'swatches'	=> 'Swatches',
 			'author'	=> 'Author',
 			'url'		=> 'Link',
-			'swatches'	=> 'Swatches'
 		);
 		
 		return $columns;
 	}
 	
+	/**
+	 * Set certain column headers as JS-sortable
+	 *
+	 * @return array Array of sortable columns
+	 */
 	function get_sortable_columns(){
-		$sortable_columns = array(
-			'title'		=> array( 'title', false ),
-			'author'	=> array( 'author', false )
-		);
+		// $sortable_columns = array(
+		// 			'title'		=> array( 'title', false ),
+		// 			'author'	=> array( 'author', false )
+		// 		);
 		return $sortable_columns;
 	}
 	
+	/**
+	 * Prepare CPT results for display in list view
+	 *
+	 * @param array $criteria
+	 */
 	function prepare_items( $criteria ) {
 		$per_page = 10;
 		
@@ -105,10 +120,6 @@ class LBCB_Kuler_List_Table extends WP_List_Table {
 		
 		$data = lbcb_get_kulers( $criteria );
 		
-		// echo "<pre>";
-		// var_dump($data);
-		// echo "</pre>";
-				
 		$current_page = $this->get_pagenum();
 		
 		$total_items = count($data);

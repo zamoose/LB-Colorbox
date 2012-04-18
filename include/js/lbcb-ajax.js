@@ -1,8 +1,9 @@
 jQuery(document).ready( function($) {
 	$(".save a").click( function() {
+		//alert($(this));
 		var data = {
-			action: "",
-			kuler: 'this will be echoed back'
+			action: 'kuler_response',
+			kuler: $(this).prop('href')
 		};
 		$.post(the_ajax_script.ajaxurl, data, function(response) {
 			alert(response);

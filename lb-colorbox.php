@@ -40,27 +40,15 @@
 if( is_admin() ){
 	include( 'include/lbcb-options.php' );
 	include( 'include/lbcb-list-table.php' );
+	include( 'include/lbcb-ajax.php' );
 }
 include( 'include/lbcb-cpt.php' );
 include( 'include/KulerPHP/Kuler/Api.php' );
 include( 'include/lbcb-kuler.php' );
 include( 'include/lbcb-output.php' );
 
-// $ratedk = lbcb_get_kulers( 'rating' );
-// $popk = lbcb_get_kulers( 'popular' );
-
-foreach($ratedk as $rks){
-	// echo "<pre>";
-	// var_dump($rks);
-	// echo "</pre>";
-	//var_dump($rks);
-	//lbcb_insert_colorbox( $rks );
-}
-
 function lbcb_enqueue_styles(){
-	//if( ( 'colorbox' == get_post_type() ) ){
 		wp_enqueue_style( 'lb-colorbox', plugin_dir_url(__FILE__) . 'include/css/lbcb-core.css', '', '', 'screen' );
-	//}
 }
 add_action( 'wp_enqueue_scripts', 'lbcb_enqueue_styles', 11 );
 add_action( 'admin_print_styles', 'lbcb_enqueue_styles', 11 );

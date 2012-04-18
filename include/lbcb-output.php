@@ -90,6 +90,7 @@ function lbcb_swatches( $cb_size = "regular", $cb_echo = true ){
  * @param array $atts
  */
 function lbcb_colorbox_shortcode( $atts ){
+	global $wpdb;
 	extract( shortcode_atts( array(
 			'size'	=> 'regular',
 			'name'	=> '',
@@ -98,6 +99,25 @@ function lbcb_colorbox_shortcode( $atts ){
 			
 			), $atts
 	));
-	echo "Colorbox!";
+	
+	$lbcb_args = array(
+		'order'				=> 'DESC',
+		'post_type'			=> 'colorbox',
+		'post_status'		=> 'publish'
+	);
+	
+	if( !empty($name))
+		$lbcb_posts = $wpdb->get_col( "select ID from $wpdb->posts where post_title LIKE '" . $name . "%' AND post_status = 'publish'" );
+	elseif( !empty($slug) )
+		$lbcb_args['name'] = $slug;
+	elseif( !empty($id) )
+		$lbcb_args['p'] = $id; 
+
+	$lbcb_query = new WP_Query( $lbcb_args );
+	
+	while( $lbcb_query->have_posts()) {
+		$lbcb_query->the_post();
+		the_title();
+	}
 }
 add_shortcode( 'colorbox', 'lbcb_colorbox_shortcode' );

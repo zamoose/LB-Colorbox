@@ -22,16 +22,21 @@
 function lbcb_get_kulers( $kuler_type = "rating" ){
 	set_exception_handler( 'lbcb_error_handler' );
 
+	$lbcb_options = get_option('lbcb_options');
+	$num_kulers = $lbcb_options['num_kulers'];
+
 	$kuler_trans = get_transient( 'lbcb_' . $kuler_type . '_kulers' );
 
-	if( empty($kuler_trans) ){
+	$kuler_trans_count = count($kuler_trans);
+
+	if( empty($kuler_trans) || ( $kuler_trans_count != $num_kulers) ){
 		$lbcb_options = get_option( 'lbcb_options' );
 		$kuler_api_key = $lbcb_options['kuler_api_key'];
 
 		if( !empty( $kuler_api_key ) ){
 			$kuler = new Kuler_Api( $kuler_api_key );
 		
-			$kuler_tmp = $kuler->get( $kuler_type );
+			$kuler_tmp = $kuler->get( $kuler_type, '0', $num_kulers );
 			$hr_k = array();
 
 			foreach( $kuler_tmp as $ra_k ){
