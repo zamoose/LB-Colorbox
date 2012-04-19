@@ -11,6 +11,9 @@
  * @since 		LB-Colorbox 0.5
  */
 class LBCB_Kuler_List_Table extends WP_List_Table {
+	
+	protected $kuler_type;
+	
 	/**
 	 * Constructor
 	 */
@@ -30,7 +33,11 @@ class LBCB_Kuler_List_Table extends WP_List_Table {
 	 */
 	function column_title( $item ){
 		$actions = array(
-			'save'	=> sprintf('<a href="?page=%s&post_type=colorbox&action=%s&kuler=%s">Save</a>',$_REQUEST['page'],'savekuler',urlencode($item['url'])),
+			'save'	=> sprintf('<a href="?page=%s&post_type=colorbox&action=%s&kuler=%s&kuler_type=%s">Save</a>',
+								$_REQUEST['page'],
+								'savekuler',
+								urlencode($item['url']),
+								$this->kuler_type)
 		);
 		
 		return sprintf('%1$s %2$s',
@@ -133,5 +140,14 @@ class LBCB_Kuler_List_Table extends WP_List_Table {
 			'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
 			'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
 		) );
+	}
+	
+	/**
+	 * Accessor function to set Kuler type
+	 *
+	 * @param string $k_type The type of kuler we're currently dealing with
+	 */
+	function set_kuler_type( $k_type ){
+		$this->kuler_type = $k_type;
 	}
 }

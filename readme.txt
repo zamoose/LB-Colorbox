@@ -28,10 +28,6 @@ You can also directly import color schemes from Adobe's [Kuler service](http://k
 
 Under Settings->ColorBox
 
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
 == Screenshots ==
 
 1. Create your own swatches and save them as Custom Post Types

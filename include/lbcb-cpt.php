@@ -171,7 +171,7 @@ function lbcb_insert_colorbox( $colorbox = array() ){
 	
 	$cb_types = array( 'original', 'colourlover', 'studiopress', 'kuler', 'colllor', 'other' );
 	
-	if( in_array( $colorbox['type'], $types) ){
+	if( in_array( $colorbox['type'], $cb_types) ){
 		$lbcb_type = $colorbox['type'];
 	}else{
 		$lbcb_type = 'other';
@@ -180,7 +180,7 @@ function lbcb_insert_colorbox( $colorbox = array() ){
 	if( $cb_ID != 0 ){
 		add_post_meta( $cb_ID, '_lbcb_type', $lbcb_type, true );
 		add_post_meta( $cb_ID, '_lbcb_author', $colorbox['author'], true );
-		add_post_meta( $cb_ID, '_lbcb_url', $colorbox['url'], true );
+		add_post_meta( $cb_ID, '_lbcb_link', $colorbox['url'], true );
 		add_post_meta( $cb_ID, '_lbcb_color1', $colorbox['color1'], true );
 		add_post_meta( $cb_ID, '_lbcb_color2', $colorbox['color2'], true );
 		add_post_meta( $cb_ID, '_lbcb_color3', $colorbox['color3'], true );

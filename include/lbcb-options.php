@@ -72,6 +72,7 @@ function lbcb_options_page(){
 function lbcb_rating_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
 	
+	$kulersListTable->set_kuler_type( 'rating' );
 	$kulersListTable->prepare_items( 'rating' );
 ?>
 	<div class="wrap">
@@ -91,6 +92,7 @@ function lbcb_rating_kulers_page() {
 function lbcb_popular_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
 	
+	$kulersListTable->set_kuler_type( 'popular' );
 	$kulersListTable->prepare_items( 'popular' );
 ?>
 	<div class="wrap">
@@ -109,7 +111,8 @@ function lbcb_popular_kulers_page() {
  */
 function lbcb_recent_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
-	
+
+	$kulersListTable->set_kuler_type( 'recent' );	
 	$kulersListTable->prepare_items( 'recent' );
 ?>
 	<div class="wrap">
@@ -129,6 +132,7 @@ function lbcb_recent_kulers_page() {
 function lbcb_random_kulers_page() {
 	$kulersListTable = new LBCB_Kuler_List_Table();
 	
+	$kulersListTable->set_kuler_type( 'random' );
 	$kulersListTable->prepare_items( 'random' );
 ?>
 	<div class="wrap">
