@@ -28,7 +28,8 @@
 }
 
 .authortitle,
-.hextitle{
+.hextitle,
+.linktitle {
 	font-weight: bold;
 }
 

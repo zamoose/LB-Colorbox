@@ -8,7 +8,7 @@ jQuery(document).ready( function($) {
 		$.post(the_ajax_script.ajaxurl, data, function(response) {
 			alert(response);
 		});
-		$(this).closest('tr').addClass('kuler-saved');
+		//$(this).closest('tr').addClass('kuler-saved');
 		return false;
 	});
 });
