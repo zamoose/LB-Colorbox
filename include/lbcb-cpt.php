@@ -164,7 +164,7 @@ function lbcb_insert_colorbox( $colorbox = array() ){
 	$post = array(
 		'post_type'		=> 'colorbox',
 		'post_title'	=> $colorbox['title'],
-		'post_status'	=> 'draft',
+		'post_status'	=> 'publish',
 	);
 	
 	$cb_ID = wp_insert_post( $post );

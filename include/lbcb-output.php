@@ -125,3 +125,20 @@ function lbcb_colorbox_shortcode( $atts ){
 	}
 }
 add_shortcode( 'colorbox', 'lbcb_colorbox_shortcode' );
+
+/**
+ * Shortcode to generate Kuler listings
+ *
+ * @param array $atts
+ */
+function lbcb_kuler_shortcode( $atts ){
+	extract( shortcode_atts( array(
+			'size'	=> 'regular',
+			'display'	=> 'table',
+			'type'	=> 'popular',
+			''
+			), $atts ));
+			
+	lbcb_kulers_out( $type, $display );
+}
+add_shortcode( 'kuler', 'lbcb_kuler_shortcode' );
