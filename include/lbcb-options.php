@@ -238,7 +238,7 @@ function lbcb_show_swatch_column( $name ){
 
 	switch( $name ){
 		case "swatches":
-			lbcb_swatches( 'mini', true );
+			lbcb_swatches( $post->ID, 'mini', true );
 		break;
 		case "type":
 			$source = get_post_meta( $post->ID, '_lbcb_type', true );

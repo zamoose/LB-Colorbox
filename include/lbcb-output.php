@@ -58,12 +58,12 @@ add_filter( 'the_content', 'lbcb_output_colorbox_post' );
 /**
  * Output a specific set of Colorbox color swatches.
  *
+ * @param int $cb_id The postID of the swatches we want to grab
  * @param string $cb_size The requested size of the swatch output
  * @param string $cb_echo Whether to output the swatch or return it
  * @return string $cb_content
  */
-function lbcb_swatches( $cb_size = "regular", $cb_echo = true ){
-	global $post;
+function lbcb_swatches( $cb_id, $cb_size = "regular", $cb_echo = true ){
 	$cb_content = '';
 	
 	if( "regular" == $cb_size){
@@ -74,7 +74,7 @@ function lbcb_swatches( $cb_size = "regular", $cb_echo = true ){
 	
 	for( $i = 1; $i <= 5; $i++ ){
 		$c_tmp = '_lbcb_color' . $i;
-		$hex = get_post_meta( $post->ID, $c_tmp, true );
+		$hex = get_post_meta( $cb_id, $c_tmp, true );
 		$cb_content .= '<div class="lbcb-swatch" style="background: ' . $hex . ';"></div>' . "\n";
 	}
 	
@@ -106,22 +106,29 @@ function lbcb_colorbox_shortcode( $atts ){
 	
 	$lbcb_args = array(
 		'order'				=> 'DESC',
+		'orderby'			=> 'date',
 		'post_type'			=> 'colorbox',
 		'post_status'		=> 'publish'
 	);
 	
 	if( !empty($name))
-		$lbcb_posts = $wpdb->get_col( "select ID from $wpdb->posts where post_title LIKE '" . $name . "%' AND post_status = 'publish'" );
-	elseif( !empty($slug) )
-		$lbcb_args['name'] = $slug;
-	elseif( !empty($id) )
+		$lbcb_args['post__in'] = $wpdb->get_col( "select ID from $wpdb->posts where post_title LIKE '%" . $name . "%' AND post_status = 'publish'" );
+	if( !empty($slug) ){
+		$lbcb_args['post_name'] = $slug;
+	} elseif( !empty($id) ){
 		$lbcb_args['p'] = $id; 
-
+	}	
+	
 	$lbcb_query = new WP_Query( $lbcb_args );
 	
+	// switch(){
+	// 	default:
+	// 	break;
+	// }
 	while( $lbcb_query->have_posts()) {
 		$lbcb_query->the_post();
 		the_title();
+		echo " ";
 	}
 }
 add_shortcode( 'colorbox', 'lbcb_colorbox_shortcode' );
@@ -131,7 +138,7 @@ add_shortcode( 'colorbox', 'lbcb_colorbox_shortcode' );
  *
  * @param array $atts
  */
-function lbcb_kuler_shortcode( $atts ){
+function lbcb_kulers_shortcode( $atts ){
 	extract( shortcode_atts( array(
 			'size'	=> 'regular',
 			'display'	=> 'table',
@@ -141,4 +148,4 @@ function lbcb_kuler_shortcode( $atts ){
 			
 	lbcb_kulers_out( $type, $display );
 }
-add_shortcode( 'kuler', 'lbcb_kuler_shortcode' );
+add_shortcode( 'kulers', 'lbcb_kulers_shortcode' );
