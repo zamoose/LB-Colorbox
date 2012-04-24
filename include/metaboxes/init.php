@@ -1,12 +1,11 @@
 <?php
-/**
- *	Script Name: 	Custom Metaboxes and Fields
- *	Contributors: 	Andrew Norcross (@norcross / andrewnorcross.com)
- *					Jared Atchison (@jaredatch / jaredatchison.com)
- *					Bill Erickson (@billerickson / billerickson.net)
- *	Description: 	This will create metaboxes with custom fields that will blow your mind.
- *	Version: 		0.9
- *	@package		Custom-Meta-Boxes
+/*
+Script Name: 	Custom Metaboxes and Fields
+Contributors: 	Andrew Norcross (@norcross / andrewnorcross.com)
+				Jared Atchison (@jaredatch / jaredatchison.com)
+				Bill Erickson (@billerickson / billerickson.net)
+Description: 	This will create metaboxes with custom fields that will blow your mind.
+Version: 		0.9
 */
 
 /**
@@ -43,8 +42,6 @@ foreach ( $meta_boxes as $meta_box ) {
  * Validate value of meta fields
  * Define ALL validation methods inside this class and use the names of these 
  * methods in the definition of meta boxes (key 'validate_func' of each field)
- * 
- * @package	Custom-Meta-Boxes
  */
 class cmb_Meta_Box_Validate {
 	function check_text( $text ) {
@@ -59,15 +56,11 @@ class cmb_Meta_Box_Validate {
  * Defines the url to which is used to load local resources.
  * This may need to be filtered for local Window installations.
  * If resources do not load, please check the wiki for details.
- *
- * @package	Custom-Meta-Boxes
  */
 define( 'CMB_META_BOX_URL', apply_filters( 'cmb_meta_box_url', trailingslashit( str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, dirname( __FILE__ ) ) ) ) );
 
 /**
  * Create meta boxes
- *
- * @package	Custom-Meta-Boxes
  */
 class cmb_Meta_Box {
 	protected $_meta_box;
@@ -232,7 +225,6 @@ class cmb_Meta_Box {
 				case 'colorpicker':
 					$meta = '' !== $meta ? $meta : $field['std'];
 					$hex_color = '(([a-fA-F0-9]){3}){1,2}$';
-
 					if ( preg_match( '/^' . $hex_color . '/i', $meta ) ) // Value is just 123abc, so prepend #.
 						$meta = '#' . $meta;
 					elseif ( ! preg_match( '/^#' . $hex_color . '/i', $meta ) ) // Value doesn't match #123abc, so sanitize to just #.
@@ -249,6 +241,7 @@ class cmb_Meta_Box {
 					echo '<textarea name="', $field['id'], '" id="', $field['id'], '" cols="60" rows="10" class="cmb_textarea_code">', '' !== $meta ? $meta : $field['std'], '</textarea>','<p class="cmb_metabox_description">', $field['desc'], '</p>';
 					break;					
 				case 'select':
+					if( empty( $meta ) && !empty( $field['std'] ) ) $meta = $field['std'];
 					echo '<select name="', $field['id'], '" id="', $field['id'], '">';
 					foreach ($field['options'] as $option) {
 						echo '<option value="', $option['value'], '"', $meta == $option['value'] ? ' selected="selected"' : '', '>', $option['name'], '</option>';
