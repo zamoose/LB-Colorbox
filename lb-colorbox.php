@@ -3,7 +3,7 @@
  * Plugin Name: LB ColorBox
  * Plugin URI: http://literalbarrage.org/blog/code/colorbox
  * Description: Store custom color swatches as custom posts for fun and profit (and use in themes!).
- * Version: 0.5.1
+ * Version: 0.6
  * Author: Doug Stewart
  * Author URI: http://literalbarrage.org/blog/
  *
