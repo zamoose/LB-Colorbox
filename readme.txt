@@ -4,7 +4,7 @@ Donate link: htttp://literalbarrage.org/blog/code/lb-colorbox
 Tags: colors, swatches, Kuler
 Requires at least: 3.3
 Tested up to: 3.3.2
-Stable tag: 0.5.1
+Stable tag: 0.6
  
 Collect and share color swatches, then use them in themes. Easy peasy.
 
@@ -62,6 +62,9 @@ Not currently.
 
 == Changelog ==
 
+= 0.6 =
+* Fatal error related to `WP_List_Table` should now be fixed.
+
 = 0.5.1 =
 * README updates
 
@@ -69,6 +72,9 @@ Not currently.
 * Initial plugin release.
 
 == Upgrade Notice ==
+= 0.6 = 
+No more fatal WP_List_Table errors
+
 = 0.5.1 =
 README updates
 

@@ -10,6 +10,11 @@
  *
  * @since 		LB-Colorbox 0.5
  */
+
+if(!class_exists('WP_List_Table')){
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+
 class LBCB_Kuler_List_Table extends WP_List_Table {
 	
 	protected $kuler_type;
