@@ -149,3 +149,61 @@ function lbcb_kulers_shortcode( $atts ){
 	lbcb_kulers_out( $type, $display );
 }
 add_shortcode( 'kulers', 'lbcb_kulers_shortcode' );
+
+/**
+ * Outputs CSS styles in the header.
+ *
+ * @param array $args
+ */
+
+function lbcb_css( $args ){
+	extract( shortcode_atts(array(
+				"name"	=> "",
+				"slug"	=> "",
+				"id"	=> "",
+			),
+			$args
+			)
+	);
+	
+	$lbcb_args = array(
+		'order'				=> 'DESC',
+		'orderby'			=> 'date',
+		'post_type'			=> 'colorbox',
+		'post_status'		=> 'publish'
+	);
+	
+	// echo $lbcb_args;
+	// echo $args;
+	// if( !empty($name))
+	// 	$lbcb_args['post__in'] = $wpdb->get_col( "select ID from $wpdb->posts where post_title LIKE '%" . $name . "%' AND post_status = 'publish'" );
+	// if( !empty($slug) ){
+	// 	$lbcb_args['post_name'] = $slug;
+	// } elseif( !empty($id) ){
+	// 	$lbcb_args['p'] = $id; 
+	// }
+	// 	
+	// $lbcb_query = new WP_Query( $lbcb_args );
+	// $lbcb_query->have_posts();	
+	
+	$colorbox = wp_get_single_post( $id );
+	$cb_meta = get_post_meta( $id );
+
+	echo '<style type="text/css">';
+		for( $i = 1; $i <= 5; $i++ ){
+			echo 	".color" . $i . " { \n" . 
+					"	color: " . $cb_meta['color' . $i][0] . ";\n" . 
+					"}\n\n";
+			
+			echo 	".bgcolor" . $i . " { \n" . 
+					"	background-color: " . $cb_meta['color' . $i][0] . ";\n" . 
+					"}\n\n";
+		}
+	echo '</style>';
+	echo "\n";
+}
+
+function lbcb_css_head() {
+	lbcb_css( array("id" => "1117" ) );
+}
+add_action( 'wp_head', 'lbcb_css_head' );
