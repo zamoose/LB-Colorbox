@@ -158,6 +158,15 @@ function lbcb_initialize_cmb_meta_boxes() {
 add_action( 'init', 'lbcb_initialize_cmb_meta_boxes', 9999 );
 
 /**
+ * Remove Yoast's WP SEO metaboxes
+ */
+function lbcb_remove_wpseo_mb() {
+    //	if ( ! current_user_can( 'edit_others_posts' ) )
+        remove_meta_box( 'wpseo_meta', 'ColorBox', 'normal' );
+}
+add_action( 'add_meta_boxes', 'lbcb_remove_wpseo_mb', 99);
+
+/**
  * Insert colorbox into the CPTs.
  */
 function lbcb_insert_colorbox( $colorbox = array() ){
